@@ -92,12 +92,14 @@ $$\begin{aligned}
 
 ### Error Codes and Exception Handling
 
-The RISC-V routines enforce validation checks and terminate via syscall `exit2` with standard exit codes:
-- **Code 36:** Empty or invalid vector length in `relu.s` or `argmax.s`.
-- **Code 37:** Invalid stride parameters in `dotproduct.s`.
-- **Code 38:** Dimension mismatch or non-positive dimension in `matmul.s`.
-- **Code 41:** File opening/read failure in `readfiles.s`.
-- **Code 42:** Invalid byte read length in `readfiles.s`.
+The RISC-V routines enforce strict parameter validation and terminate via syscall `exit2` with specific status codes:
+- **Code 36:** Empty or invalid vector length in `relu` (length < 1).
+- **Code 37:** Empty or invalid vector length in `argmax` (length < 1).
+- **Code 38:** Invalid vector length in `dotproduct` (length < 1).
+- **Code 39:** Non-positive matrix dimension in `matmul` (rows or columns < 1).
+- **Code 40:** Incompatible matrix dimensions in `matmul` (columns of A ≠ rows of B).
+- **Code 41:** File opening failure or invalid file descriptor in `readfiles`.
+- **Code 42:** Invalid read byte length (< 1) in `readfiles`.
 
 ---
 
@@ -156,15 +158,11 @@ The RISC-V assembly files target the RV32I base integer instruction set and can 
 
 ---
 
-## Authors
+## Authors & Acknowledgments
 
 - **David Vasques** ([@DeastV](https://github.com/DeastV))
 - **Guilherme Marques** ([@marques-jpg](https://github.com/marques-jpg))
 
-Course project developed for Introdução à Arquitetura de Computadores (IAC), Instituto Superior Técnico, Universidade de Lisboa.
+Collaborative group coursework developed for Introdução à Arquitetura de Computadores (IAC), Instituto Superior Técnico, Universidade de Lisboa.
 
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+*Course-Provided Specifications:* Architecture specifications, simulator harnesses (RARS, Logisim-evolution libraries), and reference testing benchmarks were provided by the IAC teaching faculty. The MIT License applies to the microarchitecture schematic, custom instruction datapath implementation, and handwritten RISC-V assembly routines.
