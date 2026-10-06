@@ -1,8 +1,12 @@
 # Spike CPU Architecture and RISC-V Neural Network Classifier
 
-Computer architecture project implementing an 8-bit single-cycle processor architecture in Logisim-evolution alongside a full 2-layer feedforward neural network image classifier written in RISC-V assembly.
+[![Language](https://img.shields.io/badge/Language-RISC--V%20Assembly-brown.svg)](https://riscv.org/)
+[![Tool](https://img.shields.io/badge/Tool-Logisim--evolution-blue.svg)](https://github.com/logisim-evolution/logisim-evolution)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Developed as part of the Introdução à Arquitetura de Computadores (IAC) curriculum at Instituto Superior Técnico (IST), Universidade de Lisboa.
+Computer architecture project implementing an 8-bit single-cycle processor architecture in Logisim-evolution alongside a 2-layer feedforward neural network image classifier written in RISC-V assembly.
+
+Developed as part of the **Introdução à Arquitetura de Computadores (IAC)** curriculum at **Instituto Superior Técnico (IST), Universidade de Lisboa**.
 
 ---
 
@@ -17,7 +21,7 @@ The repository is structured into two core systems:
 
 2. **RISC-V Assembly Linear Algebra & Neural Classifier (`assembly/`)**:
    - Fundamental mathematical and tensor kernels (`abs`, `relu`, `argmax`).
-   - High-performance matrix multiplication (`matmul`) and strided vector dot product (`dotproduct`).
+   - Matrix multiplication (`matmul`) and contiguous vector dot product (`dotproduct`).
    - File I/O system calls for loading binary neural network weights and input vectors.
    - Complete 2-layer forward propagation pipeline classifying 28x28 digit images into 10 target classes (MNIST classification).
 
@@ -85,7 +89,7 @@ $$\begin{aligned}
 | `abs.s` | `assembly/kernels/` | Computes in-place absolute value of a signed integer in memory. |
 | `relu.s` | `assembly/kernels/` | In-place vector ReLU activation; zeroes out negative elements in memory arrays. |
 | `argmax.s` | `assembly/kernels/` | Scans a 1D vector and returns the index of the highest integer element. |
-| `dotproduct.s` | `assembly/nn-classifier/` | Computes vector dot product supporting arbitrary stride offsets for matrix column indexing. |
+| `dotproduct.s` | `assembly/nn-classifier/` | Computes inner product between two contiguous integer arrays with element-wise accumulation. |
 | `matmul.s` | `assembly/nn-classifier/` | 2D integer matrix multiplication with dimension compatibility checking and row-major memory traversal. |
 | `readfiles.s` | `assembly/nn-classifier/` | File descriptor management and binary buffer ingestion via RISC-V system calls (`open`, `read`, `close`). |
 | `classify.s` | `assembly/nn-classifier/` | End-to-end classifier orchestrating file ingestion, dynamic stack frame preservation, hidden layer activation, and argmax prediction. |
@@ -158,11 +162,14 @@ The RISC-V assembly files target the RV32I base integer instruction set and can 
 
 ---
 
-## Authors & Acknowledgments
+## Known Limitations
 
-- **David Vasques** ([@DeastV](https://github.com/DeastV))
-- **Guilherme Marques** ([@marques-jpg](https://github.com/marques-jpg))
+* **Contiguous Vector Alignment:** Vector dot product routines operate on contiguous word arrays; strided column lookups require explicit row-major indexing during matrix multiplication.
+* **Monolithic classify.s Pipeline:** `classify.s` inlines arithmetic kernels directly to minimize simulator stack frame overhead during end-to-end forward propagation runs.
 
-Collaborative group coursework developed for Introdução à Arquitetura de Computadores (IAC), Instituto Superior Técnico, Universidade de Lisboa.
+---
 
-*Course-Provided Specifications:* Architecture specifications, simulator harnesses (RARS, Logisim-evolution libraries), and reference testing benchmarks were provided by the IAC teaching faculty. The MIT License applies to the microarchitecture schematic, custom instruction datapath implementation, and handwritten RISC-V assembly routines.
+## Credits
+
+* **David Vasques** ([@DeastV](https://github.com/DeastV)), **Guilherme Marques** ([@marques-jpg](https://github.com/marques-jpg))
+* Collaborative group coursework developed for Introdução à Arquitetura de Computadores (IAC) at Instituto Superior Técnico, Universidade de Lisboa. Architecture specifications, simulator harnesses (RARS, Logisim-evolution), and benchmarks provided by the teaching staff.
